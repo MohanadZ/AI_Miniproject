@@ -651,7 +651,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1034521918}
   - component: {fileID: 1034521917}
-  - component: {fileID: 1034521919}
+  - component: {fileID: 1034521920}
   m_Layer: 0
   m_Name: AStar
   m_TagString: Untagged
@@ -690,7 +690,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1034521919
+--- !u!114 &1034521920
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -699,7 +699,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1034521916}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14c14f703e32a1e40ae4b0f3d5e19d11, type: 3}
+  m_Script: {fileID: 11500000, guid: e0d9948bb11c84c46a53ea04a4176e83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   seeker: {fileID: 73165916}

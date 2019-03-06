@@ -10,6 +10,7 @@ public class GridPathFinding : MonoBehaviour
     public float nodeRadius;
     //public Transform player;
     Node[,] grid;
+    public List<Node> path;
 
     float nodeDiameter;
     int gridSizeX, gridSizeY;
@@ -74,8 +75,6 @@ public class GridPathFinding : MonoBehaviour
 
         return neighbours;
     }
-
-    public List<Node> path;
 
     void OnDrawGizmos()
     {
