@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GridPathFinding : MonoBehaviour
 {
+    public bool displayGridGizmos;
     public LayerMask unwalkableMask;
     public Vector2 gridWorldSize;
     public float nodeRadius;
@@ -15,7 +16,7 @@ public class GridPathFinding : MonoBehaviour
     float nodeDiameter;
     int gridSizeX, gridSizeY;
 
-    void Start()
+    void Awake()
     {
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
@@ -80,7 +81,7 @@ public class GridPathFinding : MonoBehaviour
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
 
-        if (grid != null)
+        if (grid != null && displayGridGizmos)
         {
             //Node playerNode = NodeFromWorldPoint(player.position);
             foreach (Node n in grid)
@@ -90,13 +91,7 @@ public class GridPathFinding : MonoBehaviour
                 //{
                 //    Gizmos.color = Color.cyan;
                 //}
-                if(path != null)
-                {
-                    if (path.Contains(n))
-                    {
-                        Gizmos.color = Color.black;
-                    }
-                }
+
                 Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
             }
         }
