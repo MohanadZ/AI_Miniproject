@@ -6,7 +6,7 @@ using UnityEngine;
 public class GridPathFinding : MonoBehaviour
 {
     public bool displayGridGizmos;
-    public LayerMask unwalkableMask;
+    public LayerMask unwalkableMask, grassMask;
     public Vector2 gridWorldSize;
     public float nodeRadius;
     //public Transform player;
@@ -47,7 +47,8 @@ public class GridPathFinding : MonoBehaviour
             {
                 Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
                 bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask));
-                grid[x, y] = new Node(walkable, worldPoint, x, y);
+                bool grassCost = Physics.CheckSphere(worldPoint, nodeRadius, grassMask);
+                grid[x, y] = new Node(walkable, grassCost, worldPoint, x, y);
             }
         }
     }
@@ -86,7 +87,19 @@ public class GridPathFinding : MonoBehaviour
             //Node playerNode = NodeFromWorldPoint(player.position);
             foreach (Node n in grid)
             {
-                Gizmos.color = (n.walkable) ? Color.white : Color.red;
+                if (n.walkable)
+                {
+                    Gizmos.color = Color.white;
+                }
+                else
+                {
+                    Gizmos.color = Color.red;
+                }
+
+                if (n.walkable && n.grass)
+                {
+                    Gizmos.color = Color.green;
+                }
                 //if (playerNode == n)
                 //{
                 //    Gizmos.color = Color.cyan;
