@@ -5,6 +5,10 @@ using System;
 
 public class PathFindingAlgorithm : MonoBehaviour
 {
+    [SerializeField] int grassCost = 1;
+    [SerializeField] int mudCost = 2;
+    [SerializeField] int waterCost = 3;
+
     GridPathFinding grid;
     PathRequestManager requestManager;
 
@@ -67,9 +71,17 @@ public class PathFindingAlgorithm : MonoBehaviour
 
                     if (neighbour.walkable && neighbour.grass)
                     {
-                        newMovementCostToNeighbor = currentNode.gCost + GetDistance(currentNode, neighbour) + 20;
+                        newMovementCostToNeighbor = currentNode.gCost + GetDistance(currentNode, neighbour) + grassCost;
                     }
-                    
+                    else if(neighbour.walkable && neighbour.mud)
+                    {
+                        newMovementCostToNeighbor = currentNode.gCost + GetDistance(currentNode, neighbour) + mudCost;
+                    }
+                    else if (neighbour.walkable && neighbour.water)
+                    {
+                        newMovementCostToNeighbor = currentNode.gCost + GetDistance(currentNode, neighbour) + waterCost;
+                    }
+
                     if (newMovementCostToNeighbor < neighbour.gCost || !openSet.Contains(neighbour))
                     {
                         neighbour.gCost = newMovementCostToNeighbor;

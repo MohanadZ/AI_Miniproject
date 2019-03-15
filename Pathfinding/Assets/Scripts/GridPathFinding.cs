@@ -6,7 +6,7 @@ using UnityEngine;
 public class GridPathFinding : MonoBehaviour
 {
     public bool displayGridGizmos;
-    public LayerMask unwalkableMask, grassMask;
+    public LayerMask unwalkableMask, grassMask, mudMask, waterMask;
     public Vector2 gridWorldSize;
     public float nodeRadius;
     //public Transform player;
@@ -47,8 +47,10 @@ public class GridPathFinding : MonoBehaviour
             {
                 Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
                 bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask));
-                bool grassCost = Physics.CheckSphere(worldPoint, nodeRadius, grassMask);
-                grid[x, y] = new Node(walkable, grassCost, worldPoint, x, y);
+                bool isGrass = Physics.CheckSphere(worldPoint, nodeRadius, grassMask);
+                bool isMud = Physics.CheckSphere(worldPoint, nodeRadius, mudMask);
+                bool isWater = Physics.CheckSphere(worldPoint, nodeRadius, waterMask);
+                grid[x, y] = new Node(walkable, isGrass, isMud, isWater, worldPoint, x, y);
             }
         }
     }
@@ -99,6 +101,16 @@ public class GridPathFinding : MonoBehaviour
                 if (n.walkable && n.grass)
                 {
                     Gizmos.color = Color.green;
+                }
+
+                if (n.walkable && n.mud)
+                {
+                    Gizmos.color = new Color(0.48f, 0.3f, 0.04f, 1f); //brown
+                }
+
+                if (n.walkable && n.water)
+                {
+                    Gizmos.color = new Color(0f, 0.35f, 1f, 1f); //blue
                 }
                 //if (playerNode == n)
                 //{
