@@ -19,8 +19,12 @@ public class PathFindingAlgorithm : MonoBehaviour
 
     Vector3 currentTile;
     Vector3 currentTile2;
+    Vector3 targetPos;
     int targetIndex = 0;
     int targetIndex2 = 0;
+
+    bool test = false;
+    bool test1 = false;
 
     void Awake()
     {
@@ -30,61 +34,83 @@ public class PathFindingAlgorithm : MonoBehaviour
         currentTile2 = seeker2.transform.position;
     }
 
+    private void Start()
+    {
+        target.hasChanged = false;
+    }
+
     void Update()
     {
         firstSeekerPath();
-        secondSeekerPath();
+        //secondSeekerPath();
     }
 
     void firstSeekerPath()
     {
-        nodeX.Clear();
-        nodeY.Clear();
-
-        path.Clear();
-
-        for (int i = 0; i < HelloRequester.algorithmPath.Length; i++)
+        if (target.hasChanged)
         {
-            if (i % 2 == 0)
-            {
-                nodeY.Add(Mathf.Abs(HelloRequester.algorithmPath[i] - 32));
-                nodeX.Add(HelloRequester.algorithmPath[i + 1]);
-            }
+            test1 = false;           
+            currentTile = seeker.transform.position;
+            nodeX.Clear();
+            nodeY.Clear();
+            path.Clear();
+
+            target.hasChanged = false;
         }
 
-        for (int j = 0; j < nodeX.Count; j++)
+        if (HelloRequester.algorithmPath.Length != 0)
         {
-            Node tile = grid.NodeFromWorldPoint(new Vector3(nodeX[j], 0.0f, nodeY[j]));
-
-            path.Add(tile);
-        }
-
-        grid.path = path;
-
-        //print("path count is " + path.Count);
-        //print("grid path count is " + grid.path.Count);
-
-        //Moving Seeker
-        if (path != null)
-        {
-            //while (true)
-            //{
-            if (seeker.transform.position == currentTile)
+            if (test1 == false)
             {
-                if (targetIndex < path.Count)
+                test1 = true;
+                for (int i = 0; i < HelloRequester.algorithmPath.Length; i++)
                 {
-                    targetIndex++;
-
-                    if (targetIndex >= path.Count)
+                    if (i % 2 == 0)
                     {
-                        targetIndex = 0;
+                        nodeY.Add(Mathf.Abs(HelloRequester.algorithmPath[i] - 32));
+                        nodeX.Add(HelloRequester.algorithmPath[i + 1]);
                     }
-                    currentTile = path[targetIndex].worldPosition;
                 }
+
+                for (int j = 0; j < nodeX.Count; j++)
+                {
+                    Node tile = grid.NodeFromWorldPoint(new Vector3(nodeX[j], 0.0f, nodeY[j]));
+
+                    path.Add(tile);
+                }
+
+                targetPos = path[path.Count - 1].worldPosition;
+                
+                grid.path = path;
             }
-            print("this is " + targetIndex);
-            seeker.transform.position = Vector3.MoveTowards(seeker.transform.position, currentTile, 0.1f);
-            //}
+
+            //Moving Seeker
+            if (path != null)
+            {
+               
+                if (seeker.transform.position == currentTile)
+                {
+                    if (targetIndex < path.Count)
+                    {
+                        targetIndex++;
+
+                        if (targetIndex >= path.Count)
+                        {
+
+                            targetIndex = 0;
+                        }
+
+                        currentTile = path[targetIndex].worldPosition;
+
+                    }
+                }
+
+                if (seeker.transform.position != targetPos)
+                {
+                    seeker.transform.position = Vector3.MoveTowards(seeker.transform.position, currentTile, 0.1f);
+                }
+                
+            }
         }
     }
 
