@@ -24,7 +24,7 @@ public class PathFindingAlgorithm : MonoBehaviour
     int targetIndex2 = 0;
 
     bool test = false;
-    bool test1 = false;
+    //bool test1 = false;
 
     void Awake()
     {
@@ -34,10 +34,10 @@ public class PathFindingAlgorithm : MonoBehaviour
         currentTile2 = seeker2.transform.position;
     }
 
-    private void Start()
-    {
-        target.hasChanged = false;
-    }
+    //private void Start()
+    //{
+    //    target.hasChanged = false;
+    //}
 
     void Update()
     {
@@ -47,22 +47,26 @@ public class PathFindingAlgorithm : MonoBehaviour
 
     void firstSeekerPath()
     {
-        if (target.hasChanged)
+        if (seeker.transform.position == targetPos)
         {
-            test1 = false;           
+            test = false;           
             currentTile = seeker.transform.position;
+            targetIndex = 0;
             nodeX.Clear();
             nodeY.Clear();
             path.Clear();
 
-            target.hasChanged = false;
+            //print("Node X size is " + nodeX.Count);
+            //print("Node Y size is " + nodeY.Count);
+
+            //target.hasChanged = false;
         }
 
         if (HelloRequester.algorithmPath.Length != 0)
         {
-            if (test1 == false)
+            if (test == false)
             {
-                test1 = true;
+                test = true;
                 for (int i = 0; i < HelloRequester.algorithmPath.Length; i++)
                 {
                     if (i % 2 == 0)
@@ -86,8 +90,7 @@ public class PathFindingAlgorithm : MonoBehaviour
 
             //Moving Seeker
             if (path != null)
-            {
-               
+            {       
                 if (seeker.transform.position == currentTile)
                 {
                     if (targetIndex < path.Count)
@@ -96,7 +99,6 @@ public class PathFindingAlgorithm : MonoBehaviour
 
                         if (targetIndex >= path.Count)
                         {
-
                             targetIndex = 0;
                         }
 
@@ -104,6 +106,7 @@ public class PathFindingAlgorithm : MonoBehaviour
 
                     }
                 }
+                print(targetIndex);
 
                 if (seeker.transform.position != targetPos)
                 {
