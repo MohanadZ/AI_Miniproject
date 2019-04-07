@@ -17,14 +17,13 @@ public class PathFindingAlgorithm : MonoBehaviour
     List<int> nodeX2 = new List<int>();
     List<int> nodeY2 = new List<int>();
 
-    Vector3 currentTile;
-    Vector3 currentTile2;
-    Vector3 targetPos;
+    Vector3 currentTile, currentTile2;
+    Vector3 targetPos, targetPos2;
     int targetIndex = 0;
     int targetIndex2 = 0;
 
-    bool test = false;
-    //bool test1 = false;
+    bool trigger = true;
+    bool trigger2 = true;
 
     void Awake()
     {
@@ -34,39 +33,29 @@ public class PathFindingAlgorithm : MonoBehaviour
         currentTile2 = seeker2.transform.position;
     }
 
-    //private void Start()
-    //{
-    //    target.hasChanged = false;
-    //}
-
     void Update()
     {
         firstSeekerPath();
-        //secondSeekerPath();
+        secondSeekerPath();
     }
 
     void firstSeekerPath()
     {
         if (seeker.transform.position == targetPos)
         {
-            test = false;           
+            trigger = true;           
             currentTile = seeker.transform.position;
             targetIndex = 0;
             nodeX.Clear();
             nodeY.Clear();
             path.Clear();
-
-            //print("Node X size is " + nodeX.Count);
-            //print("Node Y size is " + nodeY.Count);
-
-            //target.hasChanged = false;
         }
 
         if (HelloRequester.algorithmPath.Length != 0)
         {
-            if (test == false)
+            if (trigger == true)
             {
-                test = true;
+                trigger = false;
                 for (int i = 0; i < HelloRequester.algorithmPath.Length; i++)
                 {
                     if (i % 2 == 0)
@@ -106,7 +95,7 @@ public class PathFindingAlgorithm : MonoBehaviour
 
                     }
                 }
-                print(targetIndex);
+                //print(targetIndex);
 
                 if (seeker.transform.position != targetPos)
                 {
@@ -119,55 +108,67 @@ public class PathFindingAlgorithm : MonoBehaviour
 
     void secondSeekerPath()
     {
-        nodeX2.Clear();
-        nodeY2.Clear();
-
-        path2.Clear();
-
-        for (int i = 0; i < HelloRequester2.secondSeekerPath.Length; i++)
+        if (seeker2.transform.position == targetPos2)
         {
-            if (i % 2 == 0)
-            {
-                nodeY2.Add(Mathf.Abs(HelloRequester2.secondSeekerPath[i] - 32));
-                nodeX2.Add(HelloRequester2.secondSeekerPath[i + 1]);
-            }
+            trigger2 = true;
+            currentTile2 = seeker2.transform.position;
+            targetIndex2 = 0;
+            nodeX2.Clear();
+            nodeY2.Clear();
+            path2.Clear();
         }
 
-        //print("Test this now " + HelloRequester2.secondSeekerPath.Length);
-
-        for (int j = 0; j < nodeX2.Count; j++)
+        if (HelloRequester2.secondSeekerPath.Length != 0)
         {
-            Node tile2 = grid.NodeFromWorldPoint(new Vector3(nodeX2[j], 0.0f, nodeY2[j]));
-
-            path2.Add(tile2);
-        }
-
-        grid.path2 = path2;
-
-        //print("path2 count is " + path2.Count);
-        //print("grid path count is " + grid.path.Count);
-
-        //Moving Seeker
-        if (path2 != null)
-        {
-            //while (true)
-            //{
-            if (seeker2.transform.position == currentTile2)
+            if (trigger2 == true)
             {
-                if (targetIndex2 < path2.Count)
+                trigger2 = false;
+                for (int i = 0; i < HelloRequester2.secondSeekerPath.Length; i++)
                 {
-                    targetIndex2++;
-
-                    if (targetIndex2 >= path2.Count)
+                    if (i % 2 == 0)
                     {
-                        targetIndex2 = 0;
+                        nodeY2.Add(Mathf.Abs(HelloRequester2.secondSeekerPath[i] - 32));
+                        nodeX2.Add(HelloRequester2.secondSeekerPath[i + 1]);
                     }
-                    currentTile2 = path2[targetIndex2].worldPosition;
                 }
+
+                //print("Test this now " + HelloRequester2.secondSeekerPath.Length);
+
+                for (int j = 0; j < nodeX2.Count; j++)
+                {
+                    Node tile2 = grid.NodeFromWorldPoint(new Vector3(nodeX2[j], 0.0f, nodeY2[j]));
+
+                    path2.Add(tile2);
+                }
+
+                targetPos2 = path2[path2.Count - 1].worldPosition;
+
+                grid.path2 = path2;
             }
-            //print("this is " + targetIndex);
-            seeker2.transform.position = Vector3.MoveTowards(seeker2.transform.position, currentTile2, 0.1f);
-            //}
+
+            //Moving Seeker
+            if (path2 != null)
+            {
+                if (seeker2.transform.position == currentTile2)
+                {
+                    if (targetIndex2 < path2.Count)
+                    {
+                        targetIndex2++;
+
+                        if (targetIndex2 >= path2.Count)
+                        {
+                            targetIndex2 = 0;
+                        }
+                        currentTile2 = path2[targetIndex2].worldPosition;
+                    }
+                }
+                //print("this is " + targetIndex);
+
+                if (seeker2.transform.position != targetPos2)
+                {
+                    seeker2.transform.position = Vector3.MoveTowards(seeker2.transform.position, currentTile2, 0.1f);
+                } 
+            }
         }
     }
 }
