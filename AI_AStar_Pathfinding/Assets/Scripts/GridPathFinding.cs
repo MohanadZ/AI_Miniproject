@@ -11,6 +11,7 @@ public class GridPathFinding : MonoBehaviour
     Node[,] grid;                           //Array of nodes
     public List<Node> path;
     public List<Node> path2;
+    public List<Node> path3;
     float nodeDiameter;
     int gridSizeX, gridSizeY;               //The total number of nodes in x and y
 
@@ -26,19 +27,8 @@ public class GridPathFinding : MonoBehaviour
 
     public Node NodeFromWorldPoint(Vector3 worldPosition)
     {
-        /*
-        float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
-        float percentY = (worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y;
-        percentX = Mathf.Clamp01(percentX);
-        percentY = Mathf.Clamp01(percentY);
-
-        int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
-        int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
-        */
-
         int x = Mathf.RoundToInt(worldPosition.x / nodeDiameter); //- 1;
         int y = Mathf.RoundToInt(worldPosition.z / nodeDiameter); //- 1;
-
 
         return grid[x, y];
     }
@@ -46,7 +36,7 @@ public class GridPathFinding : MonoBehaviour
     void createGrid()
     {
         grid = new Node[gridSizeX, gridSizeY];
-        Vector3 worldBottomLeft = transform.position /*- Vector3.right*/ * gridWorldSize.x / 2 /*- 2 * Vector3.forward*/ * gridWorldSize.y / 2;
+        Vector3 worldBottomLeft = transform.position * gridWorldSize.x / 2 * gridWorldSize.y / 2;
 
         for (int y = gridSizeY - 1; y >= 0; y--)
         {
@@ -85,71 +75,14 @@ public class GridPathFinding : MonoBehaviour
                 }      
             }
         }
-
-        //Debug.Log(gridToArray);
-
-        /*
-        print("This is ... " + worldBottomLeft);
-        for(int y = gridSizeY - 1; y >= 0; y--)
-        {
-            for (int x = 0; x < gridSizeX; x++)
-            {
-                Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
-                print("This x = " + x + " world point is " + worldPoint);
-                bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask));
-                grid[x, y] = new Node(walkable, worldPoint, x, y);
-
-                if (walkable)
-                {
-                    gridToArray += "0";
-                }
-                else
-                {
-                    gridToArray += "1";
-                }
-            }
-        }
-         */
-
-        //print(gridToArray);
     }
-
-    /*
-    public List<Node> GetNeighbours(Node node)
-    {
-        List<Node> neighbours = new List<Node>();
-        
-        for(int x = -1; x <= 1; x++)
-        {
-            for(int y = -1; y <= 1; y++)
-            {
-                if(x == 0 && y == 0)
-                {
-                    continue;
-                }
-
-                int checkX = node.gridX + x;
-                int checkY = node.gridY + y;
-
-                if(checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY){
-                    neighbours.Add(grid[checkX, checkY]);
-                }
-            }
-        }
-
-        return neighbours;
-    }
-    */
 
     void OnDrawGizmos()
     {
-        //Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
-
         Gizmos.DrawWireCube(transform.position + Vector3.right * gridWorldSize.x / 2 + Vector3.forward * gridWorldSize.y / 2, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
 
         if (grid != null)
         {
-            //Node playerNode = NodeFromWorldPoint(player.position);
             foreach (Node n in grid)
             {
                 Gizmos.color = (n.walkable) ? Color.white : Color.red;
@@ -180,6 +113,14 @@ public class GridPathFinding : MonoBehaviour
                     if (path2.Contains(n))
                     {
                         Gizmos.color = Color.yellow;
+                    }
+                }
+
+                if(path3 != null)
+                {
+                    if (path3.Contains(n))
+                    {
+                        Gizmos.color = Color.magenta;
                     }
                 }
 

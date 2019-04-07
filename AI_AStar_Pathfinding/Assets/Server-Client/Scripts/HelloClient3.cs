@@ -3,18 +3,18 @@ using AsyncIO;
 using NetMQ;
 using NetMQ.Sockets;
 
-public class HelloClient2 : MonoBehaviour
+public class HelloClient3 : MonoBehaviour
 {
-    private HelloRequester2 _helloRequester;
+    private HelloRequester3 _helloRequester;
     public bool SendPack = true;
 
-    public GameObject seeker2Position, targetPosition;
+    public GameObject seeker3Position, targetPosition;
 
     void Update()
     {
         if (SendPack)
         {
-            string startNodeCoordinates = Mathf.RoundToInt(seeker2Position.transform.position.z).ToString() + " " + Mathf.RoundToInt(seeker2Position.transform.position.x).ToString();
+            string startNodeCoordinates = Mathf.RoundToInt(seeker3Position.transform.position.z).ToString() + " " + Mathf.RoundToInt(seeker3Position.transform.position.x).ToString();
 
             string endNodeCoordinates = " " + Mathf.RoundToInt(targetPosition.transform.position.z).ToString() + " " + Mathf.RoundToInt(targetPosition.transform.position.x).ToString();
 
@@ -32,7 +32,7 @@ public class HelloClient2 : MonoBehaviour
 
     private void Start()
     {
-        _helloRequester = new HelloRequester2();
+        _helloRequester = new HelloRequester3();
         _helloRequester.Start();
     }
 

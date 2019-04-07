@@ -5,11 +5,12 @@ using System.Linq;
 
 public class PathFindingAlgorithm : MonoBehaviour
 {
-    public Transform seeker, target, seeker2;
+    public Transform seeker, target, seeker2, seeker3;
 
     GridPathFinding grid;
     List<Node> path = new List<Node>();
     List<Node> path2 = new List<Node>();
+    List<Node> path3 = new List<Node>();
 
     List<int> nodeX = new List<int>();
     List<int> nodeY = new List<int>();
@@ -17,13 +18,14 @@ public class PathFindingAlgorithm : MonoBehaviour
     List<int> nodeX2 = new List<int>();
     List<int> nodeY2 = new List<int>();
 
-    Vector3 currentTile, currentTile2;
-    Vector3 targetPos, targetPos2;
-    int targetIndex = 0;
-    int targetIndex2 = 0;
+    List<int> nodeX3 = new List<int>();
+    List<int> nodeY3 = new List<int>();
 
-    bool trigger = true;
-    bool trigger2 = true;
+    Vector3 currentTile, currentTile2, currentTile3;
+    Vector3 targetPos, targetPos2, targetPos3;
+    int targetIndex = 0, targetIndex2 = 0, targetIndex3 = 0;
+
+    bool trigger = true, trigger2 = true, trigger3 = true;
 
     void Awake()
     {
@@ -31,12 +33,14 @@ public class PathFindingAlgorithm : MonoBehaviour
 
         currentTile = seeker.transform.position;
         currentTile2 = seeker2.transform.position;
+        currentTile3 = seeker3.transform.position;
     }
 
     void Update()
     {
         firstSeekerPath();
         secondSeekerPath();
+        thirdSeekerPath();
     }
 
     void firstSeekerPath()
@@ -168,6 +172,72 @@ public class PathFindingAlgorithm : MonoBehaviour
                 {
                     seeker2.transform.position = Vector3.MoveTowards(seeker2.transform.position, currentTile2, 0.1f);
                 } 
+            }
+        }
+    }
+
+    void thirdSeekerPath()
+    {
+        if (seeker3.transform.position == targetPos3)
+        {
+            trigger3 = true;
+            currentTile3 = seeker3.transform.position;
+            targetIndex3 = 0;
+            nodeX3.Clear();
+            nodeY3.Clear();
+            path3.Clear();
+        }
+
+        if (HelloRequester3.thirdSeekerPath.Length != 0)
+        {
+            if (trigger3 == true)
+            {
+                trigger3 = false;
+                for (int i = 0; i < HelloRequester3.thirdSeekerPath.Length; i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        nodeY3.Add(Mathf.Abs(HelloRequester3.thirdSeekerPath[i] - 32));
+                        nodeX3.Add(HelloRequester3.thirdSeekerPath[i + 1]);
+                    }
+                }
+
+                //print("Test this now " + HelloRequester2.secondSeekerPath.Length);
+
+                for (int j = 0; j < nodeX3.Count; j++)
+                {
+                    Node tile3 = grid.NodeFromWorldPoint(new Vector3(nodeX3[j], 0.0f, nodeY3[j]));
+
+                    path3.Add(tile3);
+                }
+
+                targetPos3 = path3[path3.Count - 1].worldPosition;
+
+                grid.path3 = path3;
+            }
+
+            //Moving Seeker
+            if (path3 != null)
+            {
+                if (seeker3.transform.position == currentTile3)
+                {
+                    if (targetIndex3 < path3.Count)
+                    {
+                        targetIndex3++;
+
+                        if (targetIndex3 >= path3.Count)
+                        {
+                            targetIndex3 = 0;
+                        }
+                        currentTile3 = path3[targetIndex3].worldPosition;
+                    }
+                }
+                //print("this is " + targetIndex);
+
+                if (seeker3.transform.position != targetPos3)
+                {
+                    seeker3.transform.position = Vector3.MoveTowards(seeker3.transform.position, currentTile3, 0.1f);
+                }
             }
         }
     }

@@ -179,7 +179,10 @@ def server(socketNumber):
         socket.send(pathToUnity)
 
 if __name__ == "__main__":
-    t1 = threading.Thread(target = server, args=["tcp://*:5555"])
-    t2 = threading.Thread(target = server, args=["tcp://*:5444"])
+    t1 = threading.Thread(target = server, args = ["tcp://*:5555"])
+    t2 = threading.Thread(target = server, args = ["tcp://*:5444"])
+    t3 = threading.Thread(target = server, args = ["tcp://*:5333"])
+
     t1.start()
     t2.start()
+    t3.start()
