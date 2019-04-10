@@ -24,8 +24,9 @@ public class PathFindingAlgorithm : MonoBehaviour
     Vector3 currentTile, currentTile2, currentTile3;
     Vector3 targetPos, targetPos2, targetPos3;
     int targetIndex = 0, targetIndex2 = 0, targetIndex3 = 0;
-
     bool trigger = true, trigger2 = true, trigger3 = true;
+
+    Vector3 mousePos;
 
     void Awake()
     {
@@ -38,9 +39,22 @@ public class PathFindingAlgorithm : MonoBehaviour
 
     void Update()
     {
+        targetPos2MousePos();
         firstSeekerPath();
         secondSeekerPath();
         thirdSeekerPath();
+    }
+
+    void targetPos2MousePos()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            mousePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 47.0f));
+            //Debug.Log("Mouse Pos is " + mousePos);
+            mousePos.y = 0;
+            target.transform.position = mousePos;
+            //Debug.Log("Target pos is " + target.transform.position);
+        }
     }
 
     void firstSeekerPath()
