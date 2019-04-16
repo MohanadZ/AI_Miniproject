@@ -1,9 +1,9 @@
 1) The grid is iterated over by starting at y = max to 0 and x = 0 to max, which is done in a nested for-loop.
 
-2) The object x-coordinaté in Unity is sent as y-index number in the Python matrix, and the object y-coordinate is sent as x-index in the Python matrix.
-Then, the x-index is subtracted from the grid size (32). The reason is that y = [0, 32] in Unity is equivalent to x = [32, 0], or in other words when y = 0 in Unity, it is represented by x = 32 in Python.
+2) The object x-coordinate in Unity is sent as y-index number in the Python matrix, and the object z-coordinate is sent as x-index in the Python matrix.
+Then, the x-index number in the matrix is subtracted from the grid size (32). The reason is that z = [0, 32] in Unity is equivalent to x = [32, 0], or in other words when z = 0 in Unity, it is represented by x = 32 in Python.
 
-3) Once the path is received in Unity, the x-index is added to a List that represents the y-coordinates in Unity, which has the grid size (32) subtracted from it in order to convert it back to the y-axis in Unity. If x-index = 32 in Python, the y-coordinate = 0 in Unity.
-The y-index is added to a List that represents the x-coordinate in Unity.
+3) Once the path is received in Unity, the x-index of the matrix in Python is added to a List that represents the z-coordinates in Unity, which has the grid size (32) subtracted from it in order to convert it back to the z-axis in Unity. If x-index = 32 in Python, the z-coordinate = 0 in Unity.
+The y-index of the matrix in Python is added to a List that represents the x-coordinate in Unity.
 
-4) Each pair of coordinates is added to a list that represents the path. The seeker then moves towards the target by updating its position through moving it towards the next tile on the path.
+4) Each pair of coordinates is added to a list that represents the path. The seeker then moves towards the target by updating its position through moving it towards the next tile in the path.
