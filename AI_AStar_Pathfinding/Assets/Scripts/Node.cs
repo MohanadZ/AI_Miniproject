@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Node class that has attribute that correspond to the type of tiles, the position in world coordinates, and the grid dimensions.
 public class Node
 {
     public bool walkable, grass, mud, water;

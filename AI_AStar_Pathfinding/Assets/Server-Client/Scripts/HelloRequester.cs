@@ -4,16 +4,9 @@ using NetMQ.Sockets;
 using UnityEngine;
 using System.Linq;
 
-
-///     You can copy this class and modify Run() to suits your needs.
-///     To use this class, you just instantiate, call Start() when you want to start and Stop() when you want to stop.
-
 public class HelloRequester : RunAbleThread
 {
-    ///     Stop requesting when Running=false.
-
-    public static int[] algorithmPath; //= new int[64];
-
+    public static int[] algorithmPath;
     public string messageToSend;
     
     protected override void Run()
@@ -22,14 +15,14 @@ public class HelloRequester : RunAbleThread
 
         using (RequestSocket client = new RequestSocket())
         {
+            //Port number for the first client in the TCP connection
             client.Connect("tcp://localhost:5555");
 
             while(Running)
             {
                 if (Send)
                 {
-                    //string message = client.ReceiveFrameString();
-
+                    //The start and end positions and the grid are sent over the socket
                     client.SendFrame(messageToSend);
 
                     string message = null;
@@ -42,10 +35,11 @@ public class HelloRequester : RunAbleThread
                     }
                     if (gotMessage)
                     {
-                        //Debug.Log("Received " + message);
-                        //Convert the path received from python to a string, then to a integer array
+                        //Remove unnecessary characters from the path received from the server
                         var numbers = message.Replace("(", "").Replace(",", "").Replace(")", "");
 
+                        //Split the string path whenever a space is encountered,
+                        //then convert it into integers and save them in an integer array
                         algorithmPath = numbers.Split(' ').Select(int.Parse).ToArray();
                     }
                 }       

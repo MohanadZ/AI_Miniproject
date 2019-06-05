@@ -25,14 +25,16 @@ public class GridPathFinding : MonoBehaviour
         createGrid();
     }
 
+    //Convert nodes (tiles) to world coordinates
     public Node NodeFromWorldPoint(Vector3 worldPosition)
     {
-        int x = Mathf.RoundToInt(worldPosition.x / nodeDiameter); //- 1;
-        int y = Mathf.RoundToInt(worldPosition.z / nodeDiameter); //- 1;
+        int x = Mathf.RoundToInt(worldPosition.x / nodeDiameter);
+        int y = Mathf.RoundToInt(worldPosition.z / nodeDiameter);
 
         return grid[x, y];
     }
 
+    //Function that creates a grid of the map
     void createGrid()
     {
         grid = new Node[gridSizeX, gridSizeY];
@@ -50,9 +52,7 @@ public class GridPathFinding : MonoBehaviour
 
                 grid[x, y] = new Node(walkable, isGrass, isMud, isWater, worldPoint, x, y);
 
-                //print("World Bottom left " + worldBottomLeft);
-                //print("World Point " + worldPoint);
-
+                //Represent the different tiles on the grid with unique string-number
                 if (walkable && !isGrass && !isMud && !isWater)
                 {
                     gridToArray += "0";
@@ -77,6 +77,7 @@ public class GridPathFinding : MonoBehaviour
         }
     }
 
+    //Draw the grid cube, and showcase the tiles with different colors based on their travel cost
     void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position + Vector3.right * gridWorldSize.x / 2 + Vector3.forward * gridWorldSize.y / 2, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
@@ -100,6 +101,7 @@ public class GridPathFinding : MonoBehaviour
                     Gizmos.color = new Color(0.48f, 0.3f, 0.04f, 1f); //brown
                 }
 
+                //Color the paths that the seekers follow
                 if(path != null)
                 {
                     if (path.Contains(n))

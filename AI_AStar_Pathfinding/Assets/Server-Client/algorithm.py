@@ -1,13 +1,14 @@
+# Import the necessary packages
 import time
 import zmq
 import numpy as np
 import threading
 
+# Node class representing the tiles on the grid
 class Node():
     def __init__(self, parent = None, position = None):
         self.parent = parent
         self.position = position
-
         self.g = 0
         self.h = 0
         self.f = 0
@@ -16,9 +17,10 @@ class Node():
         return self.position == other.position
 
 
+# A* algorithm function to find the shortest path.
+# The function returns a list of tuples as a path that leads from 
+# the given start node to the given end node in the grid
 def astar(maze, start, end):
-    """Returns a list of tuples as a path from the given start to the given end in the given maze"""
-
     # Create start and end node
     start_node = Node(None, start)
     start_node.g = start_node.h = start_node.f = 0
@@ -52,10 +54,10 @@ def astar(maze, start, end):
             path = []
             current = current_node
             while current is not None:
-                current.position = (current.position[0] + 1, current.position[1]) #This here is because the drawn path is 1 up for some reason 
+                current.position = (current.position[0] + 1, current.position[1])
                 path.append(current.position)
                 current = current.parent
-            return path[::-1] #Return reversed path
+            return path[::-1]               # Return reversed path
 
         # Generate children
         children = []
@@ -123,61 +125,52 @@ def astar(maze, start, end):
             open_list.append(child)
 
 
-
-#Server code
+# Server function to establish TCP communication with Unity
+# The socket is bound to 3 different port numbers,
+# corresponding to 3 different clients (agent)
 def server(socketNumber):
     context = zmq.Context()
-    socket = context.socket(zmq.REP)
-    socket.bind(socketNumber)
-    
-    #socket.bind("tcp://*:5555")
-
-    messages = []
+    socket = context.socket(zmq.REP)        # Server socket
+    socket.bind(socketNumber)               # Port number
 
     while True:
-        #Wait for next request from client
+        # Wait for next request from client
         message = socket.recv()
-        #print("Received request: %s" % message)
-        #print(message)
 
-        size = 32
+        size = 32                           # Grid size
 
-        #Decode the received message from bytes to string, then split the string whenever a ' ' is encountered. Split() method return a list.
+        # Decode the received message from bytes to string, 
+        # then split the string whenever a space is encountered. split() function returns a list.
         stringSplit = message.decode("utf-8").split(' ')
     
-        #startPoint and endPoint are of type tuple
-        startPoint = (size - int(stringSplit[0]), int(stringSplit[1]))         #Elements 0 and 1 in the list are the coordinates of the start node
-        endPoint = (size - int(stringSplit[2]), int(stringSplit[3]))           #Elements 2 and 3 in the list are the coordinates of the end node
-        gridString = stringSplit[4]                                     #Element 4 is an array representing the nodes
+        # startPoint and endPoint are of type tuple
+        startPoint = (size - int(stringSplit[0]), int(stringSplit[1]))          #Elements 0 and 1 in the list are the coordinates of the start node
+        endPoint = (size - int(stringSplit[2]), int(stringSplit[3]))            #Elements 2 and 3 in the list are the coordinates of the end node
+        gridString = stringSplit[4]                                             #Element 4 is an array representing the nodes
 
-        #The grid array-string is split into a list of characters
+        # The grid string array is split into a list of characters
         gridArray = list(gridString)
 
-        #The strings inside the list are converted to integers
+        # The strings inside the list are converted to integers
         gridInt = [int(i) for i in gridArray]
 
-        #The array of integers is split into chunks, each is equal to the grid width and grid height in Unity
+        # The array of integers is split into chunks, each is equal to the grid width and grid height in Unity
         nodes = np.array([gridInt[i : i + size] for i in range(0, len(gridInt), size)])
-
-        #print(startPoint)
-        #print(endPoint)
-        #print(nodes)
-
+        
+        # Pass the grid, start node and end node to the A* algorithm function
         algorithmPath = astar(nodes, startPoint, endPoint)
-        print(algorithmPath)
 
-        #Convert the given path from tuple to string, then encode the string to bytes
+        #Convert the given path from tuples to string, then encode the string to bytes
         pathToUnity = str.encode(" ".join(map(str, algorithmPath)))
 
-        #  In the real world usage, you just need to replace time.sleep() with
-        #  whatever work you want python to do.
+        # The connection is set to sleep in each cycle of the loop
         time.sleep(1)
-        messages.append(message)
 
-        #  Send reply back to client
-        #  In the real world usage, after you finish your work, send your output here
+        # Send the path result back to its respective client
         socket.send(pathToUnity)
 
+# Run the server function on multiple threads
+# Each thread corresponds to a client, which has a unique port number
 if __name__ == "__main__":
     t1 = threading.Thread(target = server, args = ["tcp://*:5555"])
     t2 = threading.Thread(target = server, args = ["tcp://*:5444"])

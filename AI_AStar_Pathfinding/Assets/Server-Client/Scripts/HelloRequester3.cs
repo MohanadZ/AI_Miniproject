@@ -7,7 +7,6 @@ using System.Linq;
 public class HelloRequester3 : RunAbleThread
 {
     public static int[] thirdSeekerPath; //= new int[64];
-
     public string messageToSend;
 
     protected override void Run()
@@ -16,14 +15,13 @@ public class HelloRequester3 : RunAbleThread
 
         using (RequestSocket client = new RequestSocket())
         {
+            //Port number for the third client in the TCP connection
             client.Connect("tcp://localhost:5333");
 
             while (Running)
             {
                 if (Send)
                 {
-                    //string message = client.ReceiveFrameString();
-
                     client.SendFrame(messageToSend);
 
                     string message = null;
@@ -36,10 +34,7 @@ public class HelloRequester3 : RunAbleThread
                     }
                     if (gotMessage)
                     {
-                        //Debug.Log("Received " + message);
-                        //Convert the path received from python to a string, then to a integer array
                         var numbers = message.Replace("(", "").Replace(",", "").Replace(")", "");
-
                         thirdSeekerPath = numbers.Split(' ').Select(int.Parse).ToArray();
                     }
                 }

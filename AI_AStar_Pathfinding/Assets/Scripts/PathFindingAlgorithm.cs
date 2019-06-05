@@ -45,18 +45,19 @@ public class PathFindingAlgorithm : MonoBehaviour
         thirdSeekerPath();
     }
 
+    //The position of the target character is changed by clicking with the left mouse button
     void targetPos2MousePos()
     {
         if (Input.GetMouseButtonDown(0))
         {
             mousePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 47.0f));
-            //Debug.Log("Mouse Pos is " + mousePos);
             mousePos.y = 0;
             target.transform.position = mousePos;
-            //Debug.Log("Target pos is " + target.transform.position);
         }
     }
 
+    //Create the path that is received from the server for the first seeker, in Unity,
+    //and steer the seeker along it.
     void firstSeekerPath()
     {
         if (seeker.transform.position == targetPos)
@@ -95,7 +96,7 @@ public class PathFindingAlgorithm : MonoBehaviour
                 grid.path = path;
             }
 
-            //Moving Seeker
+            //Move the seeker character
             if (path != null)
             {       
                 if (seeker.transform.position == currentTile)
@@ -113,7 +114,6 @@ public class PathFindingAlgorithm : MonoBehaviour
 
                     }
                 }
-                //print(targetIndex);
 
                 if (seeker.transform.position != targetPos)
                 {
@@ -124,6 +124,8 @@ public class PathFindingAlgorithm : MonoBehaviour
         }
     }
 
+    //Create the path that is received from the server for the second seeker, in Unity,
+    //and steer the seeker along it.
     void secondSeekerPath()
     {
         if (seeker2.transform.position == targetPos2)
@@ -150,8 +152,6 @@ public class PathFindingAlgorithm : MonoBehaviour
                     }
                 }
 
-                //print("Test this now " + HelloRequester2.secondSeekerPath.Length);
-
                 for (int j = 0; j < nodeX2.Count; j++)
                 {
                     Node tile2 = grid.NodeFromWorldPoint(new Vector3(nodeX2[j], 0.0f, nodeY2[j]));
@@ -164,7 +164,7 @@ public class PathFindingAlgorithm : MonoBehaviour
                 grid.path2 = path2;
             }
 
-            //Moving Seeker
+            //Move the seeker character
             if (path2 != null)
             {
                 if (seeker2.transform.position == currentTile2)
@@ -180,7 +180,6 @@ public class PathFindingAlgorithm : MonoBehaviour
                         currentTile2 = path2[targetIndex2].worldPosition;
                     }
                 }
-                //print("this is " + targetIndex);
 
                 if (seeker2.transform.position != targetPos2)
                 {
@@ -190,6 +189,8 @@ public class PathFindingAlgorithm : MonoBehaviour
         }
     }
 
+    //Create the path that is received from the server for the third seeker, in Unity,
+    //and steer the seeker along it.
     void thirdSeekerPath()
     {
         if (seeker3.transform.position == targetPos3)
@@ -216,8 +217,6 @@ public class PathFindingAlgorithm : MonoBehaviour
                     }
                 }
 
-                //print("Test this now " + HelloRequester2.secondSeekerPath.Length);
-
                 for (int j = 0; j < nodeX3.Count; j++)
                 {
                     Node tile3 = grid.NodeFromWorldPoint(new Vector3(nodeX3[j], 0.0f, nodeY3[j]));
@@ -230,7 +229,7 @@ public class PathFindingAlgorithm : MonoBehaviour
                 grid.path3 = path3;
             }
 
-            //Moving Seeker
+            //Move the seeker character
             if (path3 != null)
             {
                 if (seeker3.transform.position == currentTile3)
@@ -246,7 +245,6 @@ public class PathFindingAlgorithm : MonoBehaviour
                         currentTile3 = path3[targetIndex3].worldPosition;
                     }
                 }
-                //print("this is " + targetIndex);
 
                 if (seeker3.transform.position != targetPos3)
                 {

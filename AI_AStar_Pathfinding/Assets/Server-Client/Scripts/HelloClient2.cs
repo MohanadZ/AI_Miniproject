@@ -6,14 +6,14 @@ using NetMQ.Sockets;
 public class HelloClient2 : MonoBehaviour
 {
     private HelloRequester2 _helloRequester;
-    public bool SendPack = true;
-
     public GameObject seeker2Position, targetPosition;
+    public bool SendPack = true;
 
     void Update()
     {
         if (SendPack)
         {
+            //The x and y coordinates of the second seeker (start position) and the target (end position)
             string startNodeCoordinates = Mathf.RoundToInt(seeker2Position.transform.position.z).ToString() + " " + Mathf.RoundToInt(seeker2Position.transform.position.x).ToString();
 
             string endNodeCoordinates = " " + Mathf.RoundToInt(targetPosition.transform.position.z).ToString() + " " + Mathf.RoundToInt(targetPosition.transform.position.x).ToString();
